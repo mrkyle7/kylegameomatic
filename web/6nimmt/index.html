@@ -1,0 +1,45 @@
+<h1>Welcome to 6 nimmt!</h1>
+
+<h2>Current Games</h2>
+<div id="currentGames"></div>
+
+<h2>Create a Game</h2>
+<form>
+    <label for="gamename">Game Name</label><br>
+    <input type="text" id="gamename" name="gamename" placeholder="Name of the game" /><br><br>
+    <label for="gamepassword">Game Password</label><br>
+    <input type="password" id="gamepassword" name="gamepassword" placeholder="password for the game" /><br><br>
+    <label for="playername">Player Name</label><br>
+    <input type="text" id="playername" name="playername" placeholder="Your Name" /><br><br>
+    <label for="playerpassword">Player Password</label><br>
+    <input type="password" id="playerpassword" name="playerpassword" placeholder="your password" /><br><br>
+    <button type="submit" id="createGame">Create</button>
+</form>
+
+<template id="currentGame">
+    <div style="border: 1px black solid; padding: 4px">
+        <h1 data="title">
+            </h3>
+            <h2>Current Players</h2>
+            <div data="currentPlayers"></div>
+            <h2>Join Game</h2>
+            <form>
+                <label for="gamename">Game Name</label><br>
+                <input type="text" data="gamename" name="gamename" placeholder="Name of the game" /><br><br>
+                <label for="gamepassword">Game Password</label><br>
+                <input type="password" data="gamepassword" name="gamepassword"
+                    placeholder="password for the game" /><br><br>
+                <label for="playername">Player Name</label><br>
+                <input type="text" data="playername" name="playername" placeholder="Your Name" /><br><br>
+                <label for="playerpassword">Player Password</label><br>
+                <input type="password" data="playerpassword" name="playerpassword" placeholder="your password" /><br><br>
+                <button type="submit" data="joinGame">Join</button>
+            </form>
+    </div>
+</template>
+<template id="player">
+    <div>
+        <span data="playerName"></span>
+    </div>
+</template>
+<script src="landing.js"></script>
