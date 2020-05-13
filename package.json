@@ -1,0 +1,25 @@
+{
+  "name": "kylegameomatic",
+  "version": "1.0.0",
+  "description": "hosting games on the web",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo pass"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+ssh://git@github.com/mrkyle7/kylegameomatic.git"
+  },
+  "keywords": [
+    "games"
+  ],
+  "author": "Kyle Harrison",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/mrkyle7/kylegameomatic/issues"
+  },
+  "homepage": "https://github.com/mrkyle7/kylegameomatic#readme",
+  "dependencies": {
+    "express": "^4.17.1"
+  }
+}
