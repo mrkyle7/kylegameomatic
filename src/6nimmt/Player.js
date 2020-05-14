@@ -4,15 +4,19 @@ class Player {
     name;
     /** @type {string} */
     password;
+    /** @type {boolean} */
+    isHost;
     score = 66;
 
     /**
      * @param {string} name
      * @param {string} password
+     * @param {boolean} isHost
      */
-    constructor(name, password){
+    constructor(name, password, isHost){
         this.name = name;
         this.password = password;
+        this.isHost = isHost;
     }
 }
 

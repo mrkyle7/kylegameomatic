@@ -18,7 +18,9 @@ app.get('/api/v1/health', function (req, res) {
 
 app.get('/6nimmt/games', (req, res) => {
     res.setHeader('Content-Type', 'application/json');
-    res.send(JSON.stringify(sixnimmtGames))
+    const stringified = JSON.stringify(sixnimmtGames);
+    const noPass= stringified.replace(/"password":".*?"/g, '"password":"xxx"');
+    res.send(noPass);
 });
 
 app.post('/6nimmt/newGame', (req, res) => {
@@ -27,11 +29,17 @@ app.post('/6nimmt/newGame', (req, res) => {
     const playername = req.body.playername;
     const playerpassword = req.body.playerpassword;
 
-    if (sixnimmtGames.some(game => game.name === gamename)) {
+    if (!gamename.match(/[A-Za-z0-9]+/)
+        || !gamepassword.match(/[A-Za-z0-9]+/)
+        || !playername.match(/[A-Za-z0-9]+/)
+        || !playerpassword.match(/[A-Za-z0-9]+/)) {
+        res.status(400);
+        res.send("Invalid details, please ensure all fields are filled in with only letters and numbers");
+    } else if (sixnimmtGames.some(game => game.name === gamename)) {
         res.status(400);
         res.send("Game already exists with this name");
     } else {
-        const host = new Player(playername, playerpassword);
+        const host = new Player(playername, playerpassword, true);
         const game = new Game(gamename, gamepassword, host);
         sixnimmtGames.push(game);
         res.sendStatus(200);
@@ -56,8 +64,10 @@ app.post('/6nimmt/joinGame', (req, res) => {
     } else if (existingPlayer && existingPlayer.password !== playerpassword) {
         res.status(403);
         res.send("Player password is incorrect");
+    } else if (existingPlayer) {
+        res.sendStatus(200);
     } else {
-        const player = new Player(playername, playerpassword);
+        const player = new Player(playername, playerpassword, false);
         game.players.push(player);
         res.sendStatus(200);
     }

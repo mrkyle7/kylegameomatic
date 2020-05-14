@@ -68,12 +68,37 @@ function refreshGameList() {
                 game.players.forEach(player => {
                     // @ts-ignore
                     const newPlayer = templateplayer.content.cloneNode(true);
-                    const name = game.host.name === player.name ? `${player.name} (HOST)` : player.name;
+                    const name = player.isHost ? `${player.name} (HOST)` : player.name;
                     newPlayer.querySelector('[data=playerName]').innerText = name;
                     currentGame.querySelector('[data=currentPlayers]').appendChild(newPlayer);
                 })
+                const gameDiv = currentGame.querySelector('div');
                 currentGame.querySelector("[data=joinGame]").addEventListener('click', e => {
                     e.preventDefault();
+                    fetch('joinGame', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json'
+                        },
+                        body: JSON.stringify({
+                            gamename: game.name,
+                            gamepassword: gameDiv.querySelector('[data=gamepassword]').value,
+                            playername: gameDiv.querySelector('[data=playername]').value,
+                            playerpassword: gameDiv.querySelector('[data=playerpassword]').value
+                        })
+                    })
+                        .then(async response => {
+                            if (response.status === 200) {
+                                clearCreateForm();
+                                refreshGameList();
+                            } else {
+                                const error = await response.text();
+                                alert(error);
+                            }
+                        })
+                        .catch(err => {
+                            alert(err);
+                        })
                 })
                 sectionCurrentGames.appendChild(currentGame);
             });
