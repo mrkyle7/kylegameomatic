@@ -23,12 +23,12 @@ const init = () => {
             }),
             headers: {
                 "Content-Type": "application/json"
-            }
+            },
+            redirect: 'follow'
         })
             .then(async response => {
-                if (response.status === 200) {
-                    clearCreateForm();
-                    refreshGameList();
+                if (response.redirected) {
+                    window.location.href = response.url;
                 } else {
                     const error = await response.text();
                     alert(error);
@@ -85,12 +85,12 @@ function refreshGameList() {
                             gamepassword: gameDiv.querySelector('[data=gamepassword]').value,
                             playername: gameDiv.querySelector('[data=playername]').value,
                             playerpassword: gameDiv.querySelector('[data=playerpassword]').value
-                        })
+                        }),
+                        redirect: 'follow'
                     })
                         .then(async response => {
-                            if (response.status === 200) {
-                                clearCreateForm();
-                                refreshGameList();
+                            if (response.redirected) {
+                                window.location.href = response.url;
                             } else {
                                 const error = await response.text();
                                 alert(error);

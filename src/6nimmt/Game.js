@@ -10,6 +10,7 @@ class Game {
     host;
     /** @type {Player[]} */
     players = [];
+    message = 'Waiting to Start';
 
     /**
      * @param {string} name
@@ -21,6 +22,15 @@ class Game {
         this.password = password;
         this.host = host;
         this.players.push(host);
+    }
+
+    toJson(name) {
+        return {
+            name: this.name,
+            host: this.host.toJson(name),
+            players: this.players.map(p => p.toJson(name)),
+            message: this.message
+        }
     }
 }
 

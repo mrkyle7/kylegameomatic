@@ -1,0 +1,37 @@
+<head>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<h2 id="title">Welcome to the Game!</h2>
+
+<div class="messages">
+    <div class="card">
+        <b>Player Message</b>
+        <span id="playermessage"></span>
+    </div>
+
+    <div class="card">
+        <b>Game Message</b>
+        <br>
+        <span id="gamemessage"></span>
+    </div>
+</div>
+
+<div id="players" class="players card">
+
+</div>
+
+<template id="player">
+    <div class="card">
+        <span data="name"></span>
+        <br>
+        <span data="score"></span>
+        <br>
+        <span data="message"></span>
+        <br>
+        <span data="connected"></span>
+        <br>
+        <button data="boot">Boot!</button>
+    </div>
+</template>
+
+<script src='game.js'></script>
