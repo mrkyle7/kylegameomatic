@@ -7,12 +7,23 @@ const title = document.getElementById('title');
 const playermessage = document.getElementById('playermessage');
 const gamemessage = document.getElementById('gamemessage');
 
+const buttonStartGame = document.getElementById('startgame');
+const buttonNextRound = document.getElementById('nextRound');
+
+const sectionHandcards = document.getElementById('handcards');
+const sectionSelectedCards = document.getElementById('selectedCards');
 const sectionPlayers = document.getElementById('players');
 
 const templatePlayer = document.getElementById('player');
+const templatePlayingCard = document.getElementById('playingcard');
+const templatePlayingCardWithName = document.getElementById('playingcardWithName');
 
 const initgame = () => {
     startPolling();
+    buttonStartGame.addEventListener('click', (e) => {
+        e.preventDefault();
+        doAction('startGame');
+    })
 }
 
 let latestVersion;
@@ -26,38 +37,29 @@ const startPolling = () => {
     }, 500)
 }
 
-const processGameState = (state) => {
-    console.log('Processing new state', state);
+const processGameState = (game) => {
+    console.log('Processing new state', game);
 
-    const playerState = state.players.find(p => p.name === playername)
+    const playerState = game.players.find(p => p.name === playername)
 
-    title.innerText = `Hello ${playername}, you are playing in game: ${state.name}`;
+    title.innerText = `Hello ${playername}, you are playing in game: ${game.name}`;
 
     playermessage.innerText = playerState ? playerState.message : 'You left the game!';
-    gamemessage.innerText = state.message;
+    gamemessage.innerText = game.message;
 
-    clearPlayers();
-    state.players.forEach(player => {
-        // @ts-ignore
-        const newPlayer = templatePlayer.content.cloneNode(true);
-        newPlayer.querySelector('[data=name]').innerText = player.isHost ? `${player.name} (HOST)` : player.name;
-        newPlayer.querySelector('[data=score]').innerText = player.score;
-        newPlayer.querySelector('[data=message]').innerText = player.message;
-        if (player.connected) {
-            newPlayer.querySelector('[data=connected]').innerText = 'connected';
-            newPlayer.querySelector('[data=connected]').classList.add('green');
-        } else {
-            newPlayer.querySelector('[data=connected]').innerText = 'disconnected';
-            newPlayer.querySelector('[data=connected]').classList.add('red');
-        }
+    refreshPlayerList(game);
 
-        newPlayer.querySelector('[data=boot]').addEventListener('click', e => {
-            e.preventDefault();
-            doAction('bootPlayer', { bootPlayer: player.name });
-        })
-        sectionPlayers.appendChild(newPlayer);
-    })
+    if (playerState.isHost && !game.started) {
+        buttonStartGame.classList.remove('hidden');
+    } else {
+        buttonStartGame.classList.add('hidden');
+    }
 
+    refreshHandCards(playerState, game);
+
+    refreshRows(game);
+
+    refreshSelectedCards(game);
 }
 
 const clearPlayers = () => {
@@ -67,6 +69,7 @@ const clearPlayers = () => {
 }
 
 const doAction = (action, body) => {
+    body = body ? body : {};
     body.playername = playername;
     body.playerpassword = playerpass;
     body.gamename = gamename;
@@ -91,6 +94,108 @@ const doAction = (action, body) => {
         .catch(err => {
             alert(`${action} failed: ${err}`)
         })
+}
+
+function refreshSelectedCards(game) {
+    while (sectionSelectedCards.firstChild) {
+        sectionSelectedCards.removeChild(sectionSelectedCards.firstChild);
+    }
+    for (let card of game.selectedCards) {
+        // @ts-ignore
+        const newCard = templatePlayingCardWithName.content.cloneNode(true);
+        newCard.querySelector('[data=name]').innerText = card.playerName;
+        newCard.querySelector('[data=number]').innerText = card.number;
+        newCard.querySelector('[data=penalty]').innerText = card.penaltyPoints;
+        sectionSelectedCards.appendChild(newCard);
+    }
+    if (game.selectedCards.length < game.players.length) {
+        for (let i = 0; i < game.players.length - game.selectedCards.length; i++) {
+            const newCard = templatePlayingCard.content.cloneNode(true);
+            sectionSelectedCards.appendChild(newCard);
+        }
+    }
+}
+
+function refreshRows(game) {
+    for (let i = 1; i <= 4; i++) {
+        const row = document.getElementById(`row${i}`);
+        while (row.firstChild) {
+            row.removeChild(row.firstChild);
+        }
+        const cards = game[`row${i}cards`];
+        for (let card of cards) {
+            // @ts-ignore
+            const newCard = templatePlayingCard.content.cloneNode(true);
+            newCard.querySelector('[data=number]').innerText = card.number;
+            newCard.querySelector('[data=penalty]').innerText = card.penaltyPoints;
+            row.appendChild(newCard);
+        }
+        if (cards.length < 5) {
+            for (let i = 0; i < 5 - cards.length; i++) {
+                const newCard = templatePlayingCard.content.cloneNode(true);
+                row.appendChild(newCard);
+            }
+        }
+        if (cards.length < 6) {
+            const newCard = templatePlayingCard.content.cloneNode(true);
+            newCard.querySelector('.playingcard').classList.add('poison');
+            if (game.playerToChooseRow && game.playerToChooseRow.name === playername){
+                newCard.querySelector('.playingcard').classList.add('selectable');
+            }
+            row.appendChild(newCard);
+        }
+    }
+}
+
+function refreshHandCards(playerState, game) {
+    while (sectionHandcards.firstChild) {
+        sectionHandcards.removeChild(sectionHandcards.firstChild);
+    }
+    if (playerState.cards) {
+        for (let index = 0; index < playerState.cards.length; index++) {
+            const card = playerState.cards[index];
+            // @ts-ignore
+            const newCard = templatePlayingCard.content.cloneNode(true);
+            newCard.querySelector('[data=number]').innerText = card.number;
+            newCard.querySelector('[data=penalty]').innerText = card.penaltyPoints;
+            if (game.cardsSelectable) {
+                newCard.querySelector('.playingcard').classList.add('selectable');
+                newCard.querySelector('.playingcard').addEventListener('click', e => {
+                    e.preventDefault();
+                    console.log('click');
+                    doAction('selectCard', { number: card.number });
+                });
+            }
+            if (playerState.selectedCard && playerState.selectedCard.number === card.number) {
+                newCard.querySelector('.playingcard').classList.add('selected');
+            }
+            sectionHandcards.appendChild(newCard);
+        }
+    }
+}
+
+function refreshPlayerList(game) {
+    clearPlayers();
+    game.players.forEach(player => {
+        // @ts-ignore
+        const newPlayer = templatePlayer.content.cloneNode(true);
+        newPlayer.querySelector('[data=name]').innerText = player.isHost ? `${player.name} (HOST)` : player.name;
+        newPlayer.querySelector('[data=score]').innerText = player.score;
+        newPlayer.querySelector('[data=message]').innerText = player.message;
+        if (player.connected) {
+            newPlayer.querySelector('[data=connected]').innerText = 'connected';
+            newPlayer.querySelector('[data=connected]').classList.add('green');
+        }
+        else {
+            newPlayer.querySelector('[data=connected]').innerText = 'disconnected';
+            newPlayer.querySelector('[data=connected]').classList.add('red');
+        }
+        newPlayer.querySelector('[data=boot]').addEventListener('click', e => {
+            e.preventDefault();
+            doAction('bootPlayer', { bootPlayer: player.name });
+        });
+        sectionPlayers.appendChild(newPlayer);
+    });
 }
 
 function pollAndUdpate() {

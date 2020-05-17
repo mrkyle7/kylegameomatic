@@ -1,12 +1,29 @@
-.messages {
-    display: flex;
+html { 
+    background: url(../img/table.jpg) no-repeat center center fixed; 
+    -webkit-background-size: cover;
+    -moz-background-size: cover;
+    -o-background-size: cover;
+    background-size: cover;
+    color: white;
 }
+
+.messages, .cardRow {
+    display: flex;
+    flex-wrap: wrap;
+}
+
+#board {
+    margin-right: 175px;
+}
+
 .card {
     border-radius: 2px;
     width: fit-content;
     box-shadow: 0 1px 3px rgba(0, 0, 0, 0.12), 0 1px 2px rgba(0, 0, 0, 0.24);
     margin: 12px 4px 0px 4px;
     padding: 0px 4px 4px 4px;
+    background-color: white;
+    color: black;
 }
 
 .red {
@@ -19,5 +36,64 @@
 .players {
     position: absolute;
     right: 4px;
-    top: 8px;
+    top: 0px;
+    background-color: white;
+    color: black;
+}
+
+.hidden {
+    display: none !important;
+}
+
+#playingarea {
+    width: 100%;
+    display: flex;
+}
+
+#selectedCards {
+    margin-left: 200px;
+}
+.playingcard, .playingcardWithName {
+    width: 50px;
+    height: 75px;
+    background-color: #f2eecb;
+    text-align: center;
+}
+
+.playingcard [data=number] {
+    position: relative;
+    top: 36%;
+    font-size: 24px;
+}
+
+.playingcard [data=penalty] {
+    position: relative;
+    top: 45%;
+    left: 40%;
+}
+
+.playingcardWithName [data=number] {
+    position: relative;
+    top: 12%;
+    font-size: 24px;
+}
+
+.playingcardWithName [data=penalty] {
+    position: relative;
+    top: 20%;
+    left: 40%;
+}
+
+.selectable {
+    cursor: pointer;
+}
+
+.selected {
+    border-color:#9ecaed;
+    box-shadow:0 0 20px aqua;
+}
+
+.poison {
+    background-image: url('../img/poison.jpg');
+    background-size: cover;
 }

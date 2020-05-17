@@ -2,22 +2,47 @@
     <link rel="stylesheet" href="styles.css">
 </head>
 <h2 id="title">Welcome to the Game!</h2>
+<div id="board">
+    <div class="messages">
+        <div class="card">
+            <b>Player Message</b>
+            <br>
+            <span id="playermessage"></span>
+        </div>
 
-<div class="messages">
-    <div class="card">
-        <b>Player Message</b>
-        <span id="playermessage"></span>
+        <div class="card">
+            <b>Game Message</b>
+            <br>
+            <span id="gamemessage"></span>
+        </div>
+
+        <form>
+            <button class="hidden" id="startgame">Start Game</button>
+            <button class="hidden" id="nextRound">Start next round</button>
+        </form>
     </div>
 
     <div class="card">
-        <b>Game Message</b>
-        <br>
-        <span id="gamemessage"></span>
+        <span>Your Hand</span>
+        <div class="cardRow" id="handcards"></div>
     </div>
+
+    <div id="playingArea">
+        <div id="rows" class="card">
+            <div class="cardRow" id="row1"></div>
+            <div class="cardRow" id="row2"></div>
+            <div class="cardRow" id="row3"></div>
+            <div class="cardRow" id="row4"></div>
+        </div>
+        <div id="selectedCards" class="card"></div>
+    </div>
+
 </div>
 
-<div id="players" class="players card">
 
+<div class="players card">
+    <h2>Players</h2>
+    <div id="players"></div>
 </div>
 
 <template id="player">
@@ -31,6 +56,24 @@
         <span data="connected"></span>
         <br>
         <button data="boot">Boot!</button>
+    </div>
+</template>
+
+<template id="playingcard">
+    <div class="playingcard card">
+        <span data="number"></span>
+        <br>
+        <span data="penalty" class="red"> </span>
+    </div>
+</template>
+
+<template id="playingcardWithName">
+    <div class="playingcardWithName card">
+        <span data="name"></span>
+        <br>
+        <span data="number"></span>
+        <br>
+        <span data="penalty" class="red"> </span>
     </div>
 </template>
 

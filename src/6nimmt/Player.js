@@ -1,3 +1,5 @@
+const Card = require("./Card");
+
 class Player {
 
     /** @type {string} */
@@ -9,7 +11,13 @@ class Player {
     score = 66;
     message = '';
     connected = true;
+    /** @type {NodeJS.Timeout} */
     timeoutTimer;
+    /** @type {Card} */
+    selectedCard;
+
+    /** @type {Card[]} */
+    cards = []
 
     /**
      * @param {string} name
@@ -33,13 +41,24 @@ class Player {
         }, 5000);
     }
 
+    /**
+     * @param {string} [name]
+     */
     toJson(name) {
+        let cards = [];
+        let selectedCard;
+        if (name && name === this.name) {
+            cards = this.cards.map(c => c.toJson());
+            selectedCard = this.selectedCard;
+        }
         return {
             name: this.name,
             isHost: this.isHost,
             score: this.score,
             message: this.message,
-            connected: this.connected
+            connected: this.connected,
+            cards: cards,
+            selectedCard: selectedCard
         }
     }
 }
