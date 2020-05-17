@@ -37,9 +37,16 @@ app.get('/6nimmt/game/:name/:player', (req, res) => {
     const playerpass = req.query.playerpass;
 
     const game = sixnimmtGames.find(g => g.name === gamename);
-    const player = game.players.find(p => p.name === playername);
+    let player;
+    if (game) {
+        player = game.players.find(p => p.name === playername);
+    }
 
-    if (!player) {
+    if (!game) {
+        res.status(400);
+        res.send(`Game ${gamename} does not exist`);
+
+    } else if (!player) {
         res.status(400);
         res.send(`Player ${playername} is no longer in the game`);
     } else if (player.password !== playerpass) {
@@ -133,6 +140,14 @@ app.post('/6nimmt/bootPlayer', (req, res) => {
         res.send("Only the host can boot players");
     } else {
         game.players = game.players.filter(p => p.name !== bootPlayer)
+        if (game.players.length === 0) {
+            sixnimmtGames.splice(sixnimmtGames.findIndex(g => g.name === game.name), 1);
+        } else {
+            if (requestingPlayer.isHost) {
+                game.players[0].isHost = true;
+                game.host = game.players[0];
+            }
+        }
         res.sendStatus(200);
     }
 })
