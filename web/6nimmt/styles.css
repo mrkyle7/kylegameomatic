@@ -20,8 +20,8 @@ html {
     border-radius: 2px;
     width: fit-content;
     box-shadow: 0 1px 3px rgba(0, 0, 0, 0.12), 0 1px 2px rgba(0, 0, 0, 0.24);
-    margin: 12px 4px 0px 4px;
-    padding: 0px 4px 4px 4px;
+    margin: 4px;
+    padding: 4px;
     background-color: white;
     color: black;
 }
@@ -52,6 +52,10 @@ html {
 
 #selectedCards {
     margin-left: 200px;
+    display: flex;
+    flex-wrap: wrap;
+    max-width: 198px;
+    height: fit-content;
 }
 .playingcard, .playingcardWithName {
     width: 50px;
@@ -91,6 +95,11 @@ html {
 .selected {
     border-color:#9ecaed;
     box-shadow:0 0 20px aqua;
+}
+
+.poisoned {
+    border-color: rgb(230, 93, 93);
+    box-shadow:0 0 20px red;
 }
 
 .poison {

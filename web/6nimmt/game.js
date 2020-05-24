@@ -119,6 +119,11 @@ function refreshSelectedCards(game) {
 function refreshRows(game) {
     for (let i = 1; i <= 4; i++) {
         const row = document.getElementById(`row${i}`);
+        if (game.poisonedRow === i) {
+            row.classList.add('poisoned');
+        } else {
+            row.classList.remove('poisoned');
+        }
         while (row.firstChild) {
             row.removeChild(row.firstChild);
         }
@@ -128,6 +133,16 @@ function refreshRows(game) {
             const newCard = templatePlayingCard.content.cloneNode(true);
             newCard.querySelector('[data=number]').innerText = card.number;
             newCard.querySelector('[data=penalty]').innerText = card.penaltyPoints;
+            if (game.poisonedRow === i) {
+                newCard.querySelector('.playingcard').classList.add('poisoned');
+            } else {
+                newCard.querySelector('.playingcard').classList.remove('poisoned');
+                if (game.lastPlacedCard && game.lastPlacedCard.number === card.number) {
+                    newCard.querySelector('.playingcard').classList.add('selected');
+                } else {
+                    newCard.querySelector('.playingcard').classList.remove('selected');
+                }
+            }
             row.appendChild(newCard);
         }
         if (cards.length < 5) {
@@ -139,8 +154,12 @@ function refreshRows(game) {
         if (cards.length < 6) {
             const newCard = templatePlayingCard.content.cloneNode(true);
             newCard.querySelector('.playingcard').classList.add('poison');
-            if (game.playerToChooseRow && game.playerToChooseRow.name === playername){
+            if (game.playerToChooseRow && game.playerToChooseRow.name === playername) {
                 newCard.querySelector('.playingcard').classList.add('selectable');
+                newCard.querySelector('.playingcard').addEventListener('click', e => {
+                    e.preventDefault();
+                    doAction('chooseRow', { number: i })
+                });
             }
             row.appendChild(newCard);
         }

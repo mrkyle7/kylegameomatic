@@ -9,10 +9,28 @@ const sixnimmtGames = [];
 if (process.env.env === 'dev') {
     console.log('Creating test game');
     const player1 = new Player('kyle', 'pass', true);
+    player1.score = 1;
     const player2 = new Player('sam', 'pass', false);
+    player2.score = 1;
+    const player21 = new Player('sam1', 'pass', false);
+    const player22 = new Player('sam2', 'pass', false);
+    const player23 = new Player('sam3', 'pass', false);
+    const player24 = new Player('sam4', 'pass', false);
+    const player25 = new Player('sam5', 'pass', false);
+    const player26 = new Player('sam6', 'pass', false);
+    const player27 = new Player('sam7', 'pass', false);
+    const player28 = new Player('sam8', 'pass', false);
 
     const game = new Game('test', 'pass', player1);
     game.players.push(player2);
+    // game.players.push(player21);
+    // game.players.push(player22);
+    // game.players.push(player23);
+    // game.players.push(player24);
+    // game.players.push(player25);
+    // game.players.push(player26);
+    // game.players.push(player27);
+    // game.players.push(player28);
     sixnimmtGames.push(game);
 }
 
@@ -122,16 +140,20 @@ app.post('/6nimmt/bootPlayer', (req, res) => {
     const playername = req.body.playername;
     const playerpassword = req.body.playerpassword;
 
-    const bootPlayer = req.body.bootPlayer;
+    const bootPlayerName = req.body.bootPlayer;
 
     const game = sixnimmtGames.find(g => g.name === gamename);
     const requestingPlayer = game.players.find(p => p.name === playername);
+    const bootedPlayer = game.players.find(p => p.name === bootPlayerName);
     if (game.password !== gamepassword) {
         res.status(403);
         res.send("Game password is incorrect");
     } else if (!requestingPlayer) {
         res.status(400);
         res.send('Requesting Player does not exist in game');
+    } else if (!bootedPlayer) {
+        res.status(400);
+        res.send('Booted Player does not exist in game');
     } else if (requestingPlayer && requestingPlayer.password !== playerpassword) {
         res.status(403);
         res.send("Player password is incorrect");
@@ -139,15 +161,10 @@ app.post('/6nimmt/bootPlayer', (req, res) => {
         res.status(401);
         res.send("Only the host can boot players");
     } else {
-        game.players = game.players.filter(p => p.name !== bootPlayer)
+        game.bootPlayer(bootedPlayer)
         if (game.players.length === 0) {
             sixnimmtGames.splice(sixnimmtGames.findIndex(g => g.name === game.name), 1);
-        } else {
-            if (requestingPlayer.isHost) {
-                game.players[0].isHost = true;
-                game.host = game.players[0];
-            }
-        }
+        } 
         res.sendStatus(200);
     }
 })
@@ -217,6 +234,38 @@ app.post('/6nimmt/selectCard', async (req, res) => {
     else {
         const card = requestingPlayer.cards.find(c => c.number === selectedCardNumber);
         game.selectCard(requestingPlayer, card);
+        res.sendStatus(200);
+    }
+})
+
+app.post('/6nimmt/chooseRow', async (req, res) => {
+    const gamename = req.body.gamename;
+    const gamepassword = req.body.gamepassword;
+    const playername = req.body.playername;
+    const playerpassword = req.body.playerpassword;
+
+    const selectedRow = req.body.number;
+
+    const game = sixnimmtGames.find(g => g.name === gamename);
+    const requestingPlayer = game.players.find(p => p.name === playername);
+    if (game.password !== gamepassword) {
+        res.status(403);
+        res.send("Game password is incorrect");
+    } else if (!requestingPlayer) {
+        res.status(400);
+        res.send('Requesting Player does not exist in game');
+    } else if (requestingPlayer && requestingPlayer.password !== playerpassword) {
+        res.status(403);
+        res.send("Player password is incorrect");
+    } else if (requestingPlayer != game.playerToChooseRow) {
+        res.status(400);
+        res.send("It isn't your time to choose a row");
+    } else if (selectedRow < 1 || selectedRow > 4) {
+        res.status(400);
+        res.send("Invalid row number!");
+    }
+    else {
+        game.selectRow(requestingPlayer, selectedRow);
         res.sendStatus(200);
     }
 })
