@@ -45,6 +45,9 @@ app.get('/api/v1/health', function (req, res) {
 });
 
 app.get('/6nimmt/games', (req, res) => {
+    while (sixnimmtGames.findIndex(g => g.players.length === 0) !== -1){
+        sixnimmtGames.splice(sixnimmtGames.findIndex(g => g.players.length === 0), 1)
+    }
     res.setHeader('Content-Type', 'application/json');
     res.send(JSON.stringify(sixnimmtGames.map(g => g.toJson())));
 });
