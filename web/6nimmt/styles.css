@@ -76,6 +76,14 @@ html {
     left: 40%;
 }
 
+.playingcardWithName [data=name] {
+    text-overflow: clip;
+    white-space: nowrap;
+    overflow: hidden;
+    width: 50px;
+    display: inline-block;
+}
+
 .playingcardWithName [data=number] {
     position: relative;
     top: 12%;

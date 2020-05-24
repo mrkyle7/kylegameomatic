@@ -8,7 +8,7 @@ const playermessage = document.getElementById('playermessage');
 const gamemessage = document.getElementById('gamemessage');
 
 const buttonStartGame = document.getElementById('startgame');
-const buttonNextRound = document.getElementById('nextRound');
+const buttonAddRandomBot = document.getElementById('addRandomBot');
 
 const sectionHandcards = document.getElementById('handcards');
 const sectionSelectedCards = document.getElementById('selectedCards');
@@ -23,7 +23,12 @@ const initgame = () => {
     buttonStartGame.addEventListener('click', (e) => {
         e.preventDefault();
         doAction('startGame');
+    }) ;
+    buttonAddRandomBot.addEventListener('click', (e) => {
+        e.preventDefault();
+        doAction('addRandomBot');
     })
+    
 }
 
 let latestVersion;
@@ -51,8 +56,10 @@ const processGameState = (game) => {
 
     if (playerState.isHost && !game.started) {
         buttonStartGame.classList.remove('hidden');
+        buttonAddRandomBot.classList.remove('hidden');
     } else {
-        buttonStartGame.classList.add('hidden');
+        buttonStartGame.classList.add('hidden')
+        buttonAddRandomBot.classList.add('hidden');
     }
 
     refreshHandCards(playerState, game);

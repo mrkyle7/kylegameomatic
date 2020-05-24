@@ -2,6 +2,7 @@ const express = require('express');
 const app = express();
 const Player = require('./src/6nimmt/Player.js');
 const Game = require('./src/6nimmt/Game.js');
+const RandomBot = require('./src/6nimmt/bots/random.js');
 
 /** @type {Game[]} */
 const sixnimmtGames = [];
@@ -9,9 +10,9 @@ const sixnimmtGames = [];
 if (process.env.env === 'dev') {
     console.log('Creating test game');
     const player1 = new Player('kyle', 'pass', true);
-    player1.score = 1;
+    // player1.score = 1;
     const player2 = new Player('sam', 'pass', false);
-    player2.score = 1;
+    // player2.score = 1;
     const player21 = new Player('sam1', 'pass', false);
     const player22 = new Player('sam2', 'pass', false);
     const player23 = new Player('sam3', 'pass', false);
@@ -204,6 +205,39 @@ app.post('/6nimmt/startGame', async (req, res) => {
                 setTimeout(() => resolve(), 10)
             })
         }
+        res.sendStatus(200);
+    }
+})
+
+app.post('/6nimmt/addRandomBot', async (req, res) => {
+    const gamename = req.body.gamename;
+    const gamepassword = req.body.gamepassword;
+    const playername = req.body.playername;
+    const playerpassword = req.body.playerpassword;
+
+    const game = sixnimmtGames.find(g => g.name === gamename);
+    const requestingPlayer = game.players.find(p => p.name === playername);
+    if (game.password !== gamepassword) {
+        res.status(403);
+        res.send("Game password is incorrect");
+    } else if (!requestingPlayer) {
+        res.status(400);
+        res.send('Requesting Player does not exist in game');
+    } else if (requestingPlayer && requestingPlayer.password !== playerpassword) {
+        res.status(403);
+        res.send("Player password is incorrect");
+    } else if (!requestingPlayer.isHost) {
+        res.status(401);
+        res.send("Only the host can add bots to the game");
+    } else if (game.started) {
+        res.status(400);
+        res.send("Game has already started");
+    } else if (game.players.length === 10) {
+        res.status(400);
+        res.send("Game has the max 10 players");
+    }
+    else {
+        new RandomBot(game);
         res.sendStatus(200);
     }
 })
