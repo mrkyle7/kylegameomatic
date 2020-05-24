@@ -65,6 +65,15 @@ function refreshGameList() {
                 // @ts-ignore
                 const currentGame = templateCurrentGame.content.cloneNode(true);
                 currentGame.querySelector('[data=title]').innerText = game.name;
+                let status;
+                if (game.gameOver) {
+                    status = 'Finished';
+                } else if (game.started){
+                    status = 'In progress';
+                } else {
+                    status = 'Not started'
+                }
+                currentGame.querySelector('[data=status]').innerText = status;
                 game.players.forEach(player => {
                     // @ts-ignore
                     const newPlayer = templateplayer.content.cloneNode(true);

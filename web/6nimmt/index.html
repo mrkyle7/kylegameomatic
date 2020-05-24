@@ -18,22 +18,22 @@
 
 <template id="currentGame">
     <div style="border: 1px black solid; padding: 4px">
-        <h1 data="title">
-            </h3>
-            <h2>Current Players</h2>
-            <div data="currentPlayers"></div>
-            <h2>Join Game</h2>
-            <form>
-                <label for="gamepassword">Game Password</label><br>
-                <input required type="password" data="gamepassword" name="gamepassword"
-                    placeholder="password for the game" /><br><br>
-                <label for="playername">Player Name</label><br>
-                <input required type="text" data="playername" name="playername" placeholder="Your Name" /><br><br>
-                <label for="playerpassword">Player Password</label><br>
-                <input required type="password" data="playerpassword" name="playerpassword"
-                    placeholder="your password" /><br><br>
-                <button type="submit" data="joinGame">Join</button>
-            </form>
+        <h3 data="title"></h3>
+        <span data="status"></span><br/>
+        <h5>Current Players</h5>
+        <div data="currentPlayers"></div>
+        <h3>Join Game</h3>
+        <form>
+            <label for="gamepassword">Game Password</label><br>
+            <input required type="password" data="gamepassword" name="gamepassword"
+                placeholder="password for the game" /><br><br>
+            <label for="playername">Player Name</label><br>
+            <input required type="text" data="playername" name="playername" placeholder="Your Name" /><br><br>
+            <label for="playerpassword">Player Password</label><br>
+            <input required type="password" data="playerpassword" name="playerpassword"
+                placeholder="your password" /><br><br>
+            <button type="submit" data="joinGame">Join</button>
+        </form>
     </div>
 </template>
 <template id="player">
