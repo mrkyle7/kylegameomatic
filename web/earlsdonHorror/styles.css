@@ -30,9 +30,16 @@
     padding: 4px;
 }
 
+@media only screen and (max-width: 1024px) {
+    #players {
+        max-width: 100% !important;
+    }
+}
+
 #players {
     display: flex;
-    width: 40%;
+    max-width: 50%;
+    width: fit-content;
     flex-wrap: wrap;
     margin: auto;
 }

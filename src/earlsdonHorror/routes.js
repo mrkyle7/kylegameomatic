@@ -27,11 +27,11 @@ const setupearlsdonHorrorRoutes = (app) => {
         game.players.push(player21);
         game.players.push(player22);
         game.players.push(player23);
-        // game.players.push(player24);
-        // game.players.push(player25);
-        // game.players.push(player26);
-        // game.players.push(player27);
-        // game.players.push(player28);
+        game.players.push(player24);
+        game.players.push(player25);
+        game.players.push(player26);
+        game.players.push(player27);
+        game.players.push(player28);
         earlsdonHorrorGames.push(game);
 
 
