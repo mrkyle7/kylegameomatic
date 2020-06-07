@@ -1,0 +1,39 @@
+<head>
+    <link rel="stylesheet" href="styles.css">
+</head>
+
+
+<div class="middle">
+
+    <div class="card middle">
+        <span class="middle message" id="gamemessage"></span>
+    </div>
+    
+    <div class="card middle">
+        <span class="middle message" id="playersWaiting"></span>
+    </div>
+
+    <form>
+        <button class="hidden middle" id="startgame">Start Game</button>
+    </form>
+</div>
+
+
+<div id="players" class="card">
+</div>
+
+<template id="player">
+    <div class="player">
+        <br>
+        <br>
+        <span data="name"></span>
+        <br>
+        <span data="role"></span>
+        <br>
+        <span data="votes"></span>
+        <br>
+        <button></button>
+    </div>
+</template>
+
+<script src='game.js'></script>

@@ -1,0 +1,75 @@
+.night { 
+    background: url(../img/night.jpg) no-repeat center center fixed; 
+    -webkit-background-size: cover;
+    -moz-background-size: cover;
+    -o-background-size: cover;
+    background-size: cover;
+    color: white;
+}
+.day { 
+    background: url(../img/day.jpg) no-repeat center center fixed; 
+    -webkit-background-size: cover;
+    -moz-background-size: cover;
+    -o-background-size: cover;
+    background-size: cover;
+    color: white;
+}
+
+.middle {
+    width: 80%;
+    margin: auto;
+    text-align: center;
+}
+
+.message {
+    font-size: 24px;
+}
+
+
+.card {
+    padding: 4px;
+}
+
+#players {
+    display: flex;
+    width: 40%;
+    flex-wrap: wrap;
+    margin: auto;
+}
+
+.player {
+    background: url(../img/paper.jpg);
+    background-size: cover;
+    margin: 4px;
+    width: 100px;
+    height: 150px;
+    text-align: center;
+    color: rgb(31, 31, 31);
+    font-family: cursive;
+}
+
+.player.dead{
+    background: url(../img/grave.jpg);
+    background-size: cover;
+}
+
+.red {
+    color: red;
+}
+.green {
+    color: green;
+}
+
+.hidden {
+    display: none !important;
+}
+
+.selected {
+    border-color:#9ecaed;
+    box-shadow:0 0 20px aqua;
+}
+
+.killed {
+    border-color: rgb(230, 93, 93);
+    box-shadow:0 0 20px red;
+}

@@ -233,7 +233,7 @@ function pollAndUdpate() {
                 clearInterval(poller);
             } else {
                 const eTag = response.headers.get('ETag');
-                if (response.headers.get('ETag') !== latestVersion) {
+                if (eTag !== latestVersion) {
                     latestVersion = eTag;
                     const state = await response.json();
                     processGameState(state);

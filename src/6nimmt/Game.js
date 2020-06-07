@@ -15,6 +15,8 @@ class Game {
     message = 'Waiting to Start';
     started = false;
     gameOver = false;
+    /** @type {Player[]} */
+    winners;
     cardsSelectable = false;
     /** @type {Player} */
     playerToChooseRow;
@@ -283,6 +285,7 @@ class Game {
                         }, -9999999);
                         const winners = this.players.filter(p => p.score === highestScore);
                         console.log(`Winners: ${winners}, score: ${highestScore}`);
+                        this.winners = winners;
                         if (winners.length === 1) {
                             this.message = `${winners[0].name} is the winner!`;
                             winners[0].message = 'You won!'
