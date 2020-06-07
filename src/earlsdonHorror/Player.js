@@ -102,7 +102,7 @@ class Player {
         if (gameOver){
             role = this.role;
         }
-        if (player.canVote) {
+        if (player && player.canVote) {
             canBeVotedFor = this.canBeVotedFor(player, isNight, gameOver);
         }
         if (isNight) {
