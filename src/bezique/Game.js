@@ -135,6 +135,7 @@ class Game {
             player.selectedCardForTrick = undefined;
             player.cardPlayedForTrick = card;
             player.cards = player.cards.filter(c => c !== card);
+            player.cardsPlayedForMelds = player.cardsPlayedForMelds.filter(c => c !== card);
             player.cardsSelectableForTrick = false;
 
             if (card.face === '7' && this.trumpCard.suit === card.suit && !card.previousMeldValues.some(v => v === 10)) {

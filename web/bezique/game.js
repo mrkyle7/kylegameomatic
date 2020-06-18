@@ -70,7 +70,7 @@ const processGameState = (game) => {
     leadingPlayer.innerText = game.leadPlayer ? `Lead Player: ${game.leadPlayer.name}` : '  ';
     scoremessage.innerText = game.lastScoreMessage;
     playerscore.innerText = `${playerState.name}: ${playerState.score}`;
-    opponentscore.innerText = `${opponentState.name}: ${opponentState.score}`;
+    opponentscore.innerText = opponentState ? `${opponentState.name}: ${opponentState.score}` : 'waiting for opponent to join';
 
     const trumpSuit = game.trumpCard ? game.trumpCard.suit : undefined;
     let jackBezique;
@@ -103,14 +103,17 @@ const processGameState = (game) => {
         buttonPlayTrick.classList.add('hidden')
     }
 
-    refreshHandCards(playerState, game);
-    refreshOpponentHandCards(opponentState);
-    refreshMeldCards(playerState);
-    refreshOpponentMeldCards(opponentState);
-    refreshTrumpCard(game);
-    refreshDeckCard(playerState, game);
-    refreshTrickCards(playerState, opponentState)
-    refreshTricksTaken(playerState, opponentState, game)
+    if (game.started) {
+        refreshHandCards(playerState, game);
+        refreshOpponentHandCards(opponentState);
+        refreshMeldCards(playerState);
+        refreshOpponentMeldCards(opponentState);
+        refreshTrumpCard(game);
+        refreshDeckCard(playerState, game);
+        refreshTrickCards(playerState, opponentState)
+        refreshTricksTaken(playerState, opponentState, game)
+    }
+
 }
 
 const doAction = (action, body) => {
