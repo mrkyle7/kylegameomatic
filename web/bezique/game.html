@@ -1,0 +1,125 @@
+<head>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<div id="board">
+    <div class="messages">
+        <div class="card">
+            <b>Melds</b>
+            <br>
+            <span id="commonmarriage">Common Marriage. K and Q same suit. Example: KH and QH. Points: 20</span>
+            <br>
+            <span id="royalmarriage"></span>
+            <br>
+            <span id="bezique"></span>
+            <br>
+            <span>4 Jacks (any suit). Example: JH JS JS JD. Points: 40</span>
+            <br>
+            <span>4 Queens (any suit). Example: QH QS QS QD. Points: 60</span>
+            <br>
+            <span>4 Kings (any suit). Example: KH KS KS KD. Points: 80</span>
+            <br>
+            <span>4 Aces (any suit). Example: AH AS AS AD. Points: 100</span>
+            <br>
+            <span id="sequence"></span>
+            <br>
+            <span id="doublebezique"></span>
+        </div>
+        <div class="card">
+            <b>Game Messages</b>
+            <br>
+            <span id="leadingPlayer"></span>
+            <br>
+            <span id="gameStage"></span>
+            <br>
+            <br>
+            <span id="playerscore"></span>
+            <span id="opponentscore"></span>
+            <br>
+            <span id="scoremessage"></span>
+            <br>
+            <br>
+            <span id="gamemessage"></span>
+        </div>
+    </div>
+    <div class="cardRow">
+        <div class="card">
+            <b>Trump Card</b>
+            <br>
+            <div class="cardRow" id="trumpCard"></div>
+        </div>
+        <div class="card">
+            <b>Talon</b>
+            <br>
+            <div class="cardRow" id="deck"></div>
+        </div>
+
+        <form>
+            <button class="hidden" id="startgame">Start Game</button>
+        </form>
+    </div>
+
+    <div class="cardRow">
+        <div class="card">
+            <span>Your Hand</span>
+            <div class="cardRow" id="playerhandcards"></div>
+        </div>
+        <div class="card">
+            <b>Tricks Taken</b>
+            <br>
+            <div class="cardRow" id="tricks"></div>
+        </div>
+    </div>
+
+
+    <div class="card">
+        <span>Your Melds</span>
+        <div class="cardRow" id="playermeldcards"></div>
+    </div>
+
+    <form>
+        <button class="selectable" id="playTrick">Play Card(s)</button>
+    </form>
+
+    <div class="cardRow">
+        <div class="card">
+            <span>Your Card</span>
+            <div class="cardRow" id="playertrickcard"></div>
+        </div>
+
+        <div class="card">
+            <span>Opponent's card</span>
+            <div class="cardRow" id="opponenttrickcard"></div>
+        </div>
+    </div>
+
+    <div class="card">
+        <span>Opponent's Melds</span>
+        <div class="cardRow" id="opponentmeldcards"></div>
+    </div>
+
+    <div class="cardRow">
+        <div class="card">
+            <span>Opponent's hand</span>
+            <div class="cardRow" id="opponenthandcards"></div>
+        </div>
+
+        <div class="card">
+            <b>Tricks Taken</b>
+            <br>
+            <div class="cardRow" id="opponenttricks"></div>
+        </div>
+    </div>
+
+</div>
+
+
+<template id="playingcard">
+    <img class="playingcard" />
+</template>
+
+<template id="talon">
+    <img class="playingcard" />
+    <span class="decknumber"></span>
+</template>
+
+<script src='game.js'></script>

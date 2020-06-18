@@ -2,6 +2,7 @@ const express = require('express');
 const app = express();
 const setup6nimmtRoutes = require('./src/6nimmt/routes')
 const setupearlsdonHorrorRoutes = require('./src/earlsdonHorror/routes')
+const setupBeziqueRoutes = require('./src/bezique/routes')
 
 
 app.use(express.static('web'));
@@ -15,6 +16,7 @@ app.get('/api/v1/health', function (req, res) {
 
 setup6nimmtRoutes(app);
 setupearlsdonHorrorRoutes(app);
+setupBeziqueRoutes(app);
 
 
 app.listen(app.get('port'), () => {

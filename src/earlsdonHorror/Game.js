@@ -161,7 +161,7 @@ class Game {
             const highestVote = this.players.map(p => p.votedLynchBy.length).reduce((a, b) => Math.max(a, b));
 
             if (this.players.some(p => p.votedLynchBy.length >= majorityVoteNumber)
-                || (!this.players.some(p => !p.hasVoted && !p.isDead)
+                || (this.players.every(p => p.hasVoted || p.isDead)
                     && this.players.filter(p => p.votedLynchBy.length === highestVote).length === 1)) {
                 this.players.forEach(p => p.canVote = false);
                 this.switchToNight(5);

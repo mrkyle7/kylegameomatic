@@ -106,7 +106,7 @@ class Game {
             player.selectedCard = card;
             player.message = '';
 
-            if (!this.players.some(p => p.selectedCard === undefined)) {
+            if (this.players.every(p => p.selectedCard)) {
                 this.cardsSelectable = false;
                 this.message = '';
                 this.playTheCards();
@@ -329,7 +329,7 @@ class Game {
                     this.players.find(p => !p.isHost).isHost = true;
                 }
                 this.players = this.players.filter(p => p !== player);
-                if (!this.players.some(p => p.selectedCard === undefined)) {
+                if (this.players.every(p => p.selectedCard)) {
                     this.cardsSelectable = false;
                     this.message = '';
                     this.playTheCards();
