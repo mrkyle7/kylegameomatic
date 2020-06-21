@@ -200,32 +200,66 @@ const setupBeziqueRoutes = (app) => {
         if (game.password !== gamepassword) {
             res.status(403);
             res.send("Game password is incorrect");
+            return
         } else if (!requestingPlayer) {
             res.status(400);
             res.send('Requesting Player does not exist in game');
+            return
         } else if (requestingPlayer && requestingPlayer.password !== playerpassword) {
             res.status(403);
             res.send("Player password is incorrect");
+            return
         } else if (!(requestingPlayer.cardsSelectableForTrick || requestingPlayer.cardsSelectableForMeld)) {
             res.status(400);
             res.send("You cannot play cards for tricks right now");
+            return
         } else if (!(requestingPlayer.selectedCardForTrick || requestingPlayer.selectedCardsForMeld.length > 0)) {
             res.status(400);
             res.send("You haven't selected a card");
+            return
+        } else if (requestingPlayer.cardsSelectableForTrick && game.lastRounds && requestingPlayer === game.secondPlayer) {
+            let couldWinTrick = false
+            const allPlayerCards = requestingPlayer.cards.concat(requestingPlayer.cardsPlayedForMelds)
+            if (allPlayerCards.some(c => c.suit === game.leadPlayer.cardPlayedForTrick.suit &&
+                c.value > game.leadPlayer.cardPlayedForTrick.value)) {
+                couldWinTrick = true
+            }
+            if (game.leadPlayer.cardPlayedForTrick.suit !== game.trumpCard.suit &&
+                allPlayerCards.some(c => c.suit === game.trumpCard.suit) &&
+                allPlayerCards.every(c => c.suit !== game.leadPlayer.cardPlayedForTrick.suit)) {
+                couldWinTrick = true
+            }
+            let doesWinTrick = false;
+            if (requestingPlayer.selectedCardForTrick.suit === game.leadPlayer.cardPlayedForTrick.suit &&
+                requestingPlayer.selectedCardForTrick.value > game.leadPlayer.cardPlayedForTrick.value) {
+                doesWinTrick = true
+            }
+            if (game.leadPlayer.cardPlayedForTrick.suit !== game.trumpCard.suit &&
+                requestingPlayer.selectedCardForTrick.suit === game.trumpCard.suit) {
+                doesWinTrick = true
+            }
+            if (allPlayerCards.some(c => c.suit === game.leadPlayer.cardPlayedForTrick.suit) &&
+                requestingPlayer.selectedCardForTrick.suit !== game.leadPlayer.cardPlayedForTrick.suit) {
+                res.status(400)
+                res.send("You must follow suit!")
+                return
+            } else if (couldWinTrick && !doesWinTrick) {
+                res.status(400)
+                res.send("You must win the trick if you can!")
+                return
+            }
         }
-        else {
-            if (requestingPlayer.cardsSelectableForTrick) {
-                game.playCardForTrick(requestingPlayer, requestingPlayer.selectedCardForTrick);
-                res.sendStatus(200);
+        if (requestingPlayer.cardsSelectableForTrick) {
+            game.playCardForTrick(requestingPlayer, requestingPlayer.selectedCardForTrick);
+            res.sendStatus(200);
+        } else {
+            const meld = new Meld(requestingPlayer.selectedCardsForMeld, game.trumpCard);
+            if (!meld.isValid()) {
+                res.status(400)
+                res.send(meld.invalidReason)
             } else {
-                const meld = new Meld(requestingPlayer.selectedCardsForMeld, game.trumpCard);
-                if (!meld.isValid()) {
-                    res.status(400)
-                    res.send(meld.invalidReason)
-                } else {
-                    game.playCardsForMeld(meld, requestingPlayer)
-                    res.sendStatus(200);
-                }
+                game.playCardsForMeld(meld, requestingPlayer)
+                res.sendStatus(200);
             }
         }
     })

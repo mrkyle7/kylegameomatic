@@ -3,10 +3,8 @@ const gamepass = decodeURIComponent(window.location.search.match(/(\?|&)gamepass
 const playername = decodeURIComponent(window.location.search.match(/(\?|&)playername\=([^&]*)/)[2]);
 const playerpass = decodeURIComponent(window.location.search.match(/(\?|&)playerpassword\=([^&]*)/)[2]);
 
-const leadingPlayer = document.getElementById('leadingPlayer');
 const gamemessage = document.getElementById('gamemessage');
 const scoremessage = document.getElementById('scoremessage');
-const gameStage = document.getElementById('gameStage');
 
 const commonmarriage = document.getElementById('royalmarriage');
 const royalmarriage = document.getElementById('royalmarriage');
@@ -36,19 +34,20 @@ const templateTalon = document.getElementById('talon');
 const templatePlayingCardWithName = document.getElementById('playingcardWithName');
 
 const initgame = () => {
-    startPolling();
     buttonStartGame.addEventListener('click', (e) => {
         e.preventDefault();
         doAction('startGame');
     });
-
+    
     buttonPlayTrick.addEventListener('click', e => {
         e.preventDefault();
         doAction('playCard');
     })
+    startPolling();
 }
 
 let latestVersion;
+let lastScoreMessage;
 let poller;
 
 // functions
@@ -66,9 +65,11 @@ const processGameState = (game) => {
     const opponentState = game.players.find(p => p.name !== playername)
 
     gamemessage.innerText = game.message;
-    gameStage.innerText = game.lastRounds ? 'Final Rounds - no Melds' : 'First Rounds - meld away!'
-    leadingPlayer.innerText = game.leadPlayer ? `Lead Player: ${game.leadPlayer.name}` : '  ';
     scoremessage.innerText = game.lastScoreMessage;
+    if (lastScoreMessage !== game.lastScoreMessage) {
+        console.log(game.lastScoreMessage);
+        lastScoreMessage = game.lastScoreMessage
+    }
     playerscore.innerText = `${playerState.name}: ${playerState.score}`;
     opponentscore.innerText = opponentState ? `${opponentState.name}: ${opponentState.score}` : 'waiting for opponent to join';
 
@@ -98,9 +99,9 @@ const processGameState = (game) => {
     }
 
     if (playerState.selectedCardForTrick || playerState.selectedCardsForMeld.length > 0) {
-        buttonPlayTrick.classList.remove('hidden')
+        buttonPlayTrick.disabled = false
     } else {
-        buttonPlayTrick.classList.add('hidden')
+        buttonPlayTrick.disabled = true
     }
 
     if (game.started) {
@@ -158,7 +159,6 @@ function refreshHandCards(playerState, game) {
                 newCard.querySelector('.playingcard').classList.add('selectable');
                 newCard.querySelector('.playingcard').addEventListener('click', e => {
                     e.preventDefault();
-                    console.log('click');
                     doAction('selectCard', { id: card.id });
                 });
             }
@@ -230,45 +230,47 @@ function refreshTricksTaken(playerState, opponentState, game) {
         tricks.removeChild(tricks.firstChild);
     }
     if (game.revealBrisques) {
-        for (let index = 0; index < playerState.cards.length; index++) {
-            const card = playerState.cards[index];
+        for (let index = 0; index < playerState.cardsWonFromTricks.length; index++) {
+            const card = playerState.cardsWonFromTricks[index];
             // @ts-ignore
             const newCard = templatePlayingCard.content.cloneNode(true);
             newCard.querySelector('img').src = card.img;
-            tricks.appendChild(newCard);
+
+            if (card.face === '10' || card.face === 'A') {
+                newCard.querySelector('img').classList.add('brisque')
+            }
+            tricks.appendChild(newCard)
         }
 
-    } else {
-        if (playerState.cardsWonFromTricks.length > 0) {
-            // @ts-ignore
-            const newCard = templatePlayingCard.content.cloneNode(true);
-            newCard.querySelector('img').src = '../img/cardback.jpg';
+    } else if (playerState.numberCardsWonFromTricks > 0) {
+        // @ts-ignore
+        const newCard = templatePlayingCard.content.cloneNode(true);
+        newCard.querySelector('img').src = '../img/cardback.jpg';
 
-            tricks.appendChild(newCard);
-        }
+        tricks.appendChild(newCard);
     }
-
 
     while (opponenttricks.firstChild) {
         opponenttricks.removeChild(opponenttricks.firstChild);
     }
 
     if (game.revealBrisques) {
-        for (let index = 0; index < opponentState.cards.length; index++) {
-            const card = opponentState.cards[index];
+        for (let index = 0; index < opponentState.cardsWonFromTricks.length; index++) {
+            const card = opponentState.cardsWonFromTricks[index];
             // @ts-ignore
             const newCard = templatePlayingCard.content.cloneNode(true);
             newCard.querySelector('img').src = card.img;
+            if (card.face === '10' || card.face === 'A') {
+                newCard.querySelector('img').classList.add('brisque')
+            }
             opponenttricks.appendChild(newCard);
         }
-    } else {
-        if (opponentState.numberCardsWonFromTricks > 0) {
-            // @ts-ignore
-            const newCard = templatePlayingCard.content.cloneNode(true);
-            newCard.querySelector('img').src = '../img/cardback.jpg';
+    } else if (opponentState.numberCardsWonFromTricks > 0) {
+        // @ts-ignore
+        const newCard = templatePlayingCard.content.cloneNode(true);
+        newCard.querySelector('img').src = '../img/cardback.jpg';
 
-            opponenttricks.appendChild(newCard);
-        }
+        opponenttricks.appendChild(newCard);
     }
 }
 

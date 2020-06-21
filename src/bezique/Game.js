@@ -144,6 +144,7 @@ class Game {
             }
 
             if (this.players.every(p => p.cardPlayedForTrick)) {
+                this.message = 'Checking who won!'
                 setTimeout(() => {
                     /** @type {Player} */
                     let winner;
@@ -176,7 +177,7 @@ class Game {
                     if (!this.lastRounds) {
                         winner.cardsSelectableForMeld = true;
                         this.message = `${winner.name} won the trick! Waiting for them to play a meld or pick up a card.`;
-                    } else if (winner.cards.length > 0) {
+                    } else if (winner.cards.length + winner.cardsPlayedForMelds.length > 0) {
                         winner.cardsSelectableForTrick = true;
                         this.message = `${winner.name} won the trick! Waiting for them to play the next card.`;
                     } else {
@@ -208,7 +209,6 @@ class Game {
                                 if (this.players.some(p => p.score >= 1000)) {
                                     const winner = this.leadPlayer.score > this.secondPlayer.score ? this.leadPlayer : this.secondPlayer
                                     this.message = `${winner.name} won the game!`
-                                    this.lastScoreMessage = ''
                                 } else {
                                     this.start()
                                 }
@@ -246,7 +246,7 @@ class Game {
         } else {
             player.cardsPlayedForMelds = player.cardsPlayedForMelds.concat(meld.cards.filter(m => player.cardsPlayedForMelds.every(c => c !== m)))
         }
-        player.cardsPlayedForMelds.forEach(card => {
+        meld.cards.forEach(card => {
             card.previousMeldValues.push(meld.value)
         })
         this.lastScoreMessage = `${player.name} melded ${meld.name} scoring ${meld.value} points!`
@@ -265,8 +265,6 @@ class Game {
             } else if (this.deck.length === 1) {
                 this.leadPlayer.cards.push(this.deck.pop())
                 this.secondPlayer.cards.push(this.trumpCard)
-                this.trumpCard = undefined;
-            } else {
                 this.lastRounds = true;
             }
             this.players.forEach(p => {
@@ -293,7 +291,7 @@ class Game {
         return {
             name: this.name,
             host: this.host.toJson(name),
-            players: this.players.map(p => p.toJson(name)),
+            players: this.players.map(p => p.toJson(name, this.revealBrisques)),
             message: this.message,
             started: this.started,
             gameOver: this.gameOver,

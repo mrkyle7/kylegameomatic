@@ -1,5 +1,6 @@
 <head>
     <link rel="stylesheet" href="styles.css">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
 </head>
 <div id="board">
     <div class="messages">
@@ -24,24 +25,38 @@
             <br>
             <span id="doublebezique"></span>
         </div>
+    
+    </div>
+
+    <div class="cardRow">
         <div class="card">
-            <b>Game Messages</b>
+            <span>Opponent's hand</span>
+            <div class="cardRow" id="opponenthandcards"></div>
+        </div>
+        <div class="card">
+            <span>Opponent's Melds</span>
+            <div class="cardRow" id="opponentmeldcards"></div>
+        </div>
+
+        <div class="card">
+            <b>Tricks Taken</b>
             <br>
-            <span id="leadingPlayer"></span>
-            <br>
-            <span id="gameStage"></span>
-            <br>
-            <br>
+            <div class="cardRow" id="opponenttricks"></div>
+        </div>
+
+    </div>
+
+    <div class="cardRow">
+        <div class="card">
             <span id="playerscore"></span>
             <span id="opponentscore"></span>
+            <br>
             <br>
             <span id="scoremessage"></span>
             <br>
             <br>
             <span id="gamemessage"></span>
         </div>
-    </div>
-    <div class="cardRow">
         <div class="card">
             <b>Trump Card</b>
             <br>
@@ -56,24 +71,13 @@
         <form>
             <button class="hidden" id="startgame">Start Game</button>
         </form>
-    </div>
-
-    <div class="cardRow">
         <div class="card">
-            <span>Your Hand</span>
-            <div class="cardRow" id="playerhandcards"></div>
+            <div class="cardRow" id="playertrickcard"></div>
         </div>
+
         <div class="card">
-            <b>Tricks Taken</b>
-            <br>
-            <div class="cardRow" id="tricks"></div>
+            <div class="cardRow" id="opponenttrickcard"></div>
         </div>
-    </div>
-
-
-    <div class="card">
-        <span>Your Melds</span>
-        <div class="cardRow" id="playermeldcards"></div>
     </div>
 
     <form>
@@ -82,31 +86,18 @@
 
     <div class="cardRow">
         <div class="card">
-            <span>Your Card</span>
-            <div class="cardRow" id="playertrickcard"></div>
+            <span>Your Hand</span>
+            <div class="cardRow" id="playerhandcards"></div>
         </div>
-
         <div class="card">
-            <span>Opponent's card</span>
-            <div class="cardRow" id="opponenttrickcard"></div>
-        </div>
-    </div>
-
-    <div class="card">
-        <span>Opponent's Melds</span>
-        <div class="cardRow" id="opponentmeldcards"></div>
-    </div>
-
-    <div class="cardRow">
-        <div class="card">
-            <span>Opponent's hand</span>
-            <div class="cardRow" id="opponenthandcards"></div>
+            <span>Your Melds</span>
+            <div class="cardRow" id="playermeldcards"></div>
         </div>
 
         <div class="card">
             <b>Tricks Taken</b>
             <br>
-            <div class="cardRow" id="opponenttricks"></div>
+            <div class="cardRow" id="tricks"></div>
         </div>
     </div>
 

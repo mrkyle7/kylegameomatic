@@ -56,8 +56,9 @@ class Player {
 
     /**
      * @param {string} [name]
+     * @param {boolean} [revealBrisques]
      */
-    toJson(name) {
+    toJson(name, revealBrisques) {
         let cards = [];
         let selectedCardForTrick;
         let selectedCardsForMeld;
@@ -66,6 +67,8 @@ class Player {
             cards = this.cards.map(c => c.toJson());
             selectedCardForTrick = this.selectedCardForTrick ? this.selectedCardForTrick.toJson() : undefined;
             selectedCardsForMeld = this.selectedCardsForMeld.map(c => c.toJson())
+        }
+        if (revealBrisques) {
             cardsWonFromTricks = this.cardsWonFromTricks.map(c => c.toJson());
         }
         return {
