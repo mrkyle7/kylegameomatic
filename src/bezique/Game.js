@@ -14,7 +14,7 @@ class Game {
     /** @type {Player[]} */
     players = [];
     message = 'Waiting to Start';
-    lastScoreMessage = ''; k
+    lastScoreMessage = ''; 
     started = false;
     gameOver = false;
     lastRounds = false;
@@ -47,6 +47,7 @@ class Game {
     start() {
         try {
             this.revealBrisques = false;
+            this.lastRounds = false;
             const randomSortedCards = [];
 
             const cardFaces = ['7', '8', '9', 'J', 'Q', 'K', '10', 'A'];
@@ -212,7 +213,7 @@ class Game {
                                 } else {
                                     this.start()
                                 }
-                            }, 2000)
+                            }, 30000)
 
                         }, 2000)
 
