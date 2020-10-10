@@ -53,9 +53,12 @@ const processGameState = (game) => {
         document.querySelector('html').classList.add('day');
     }
 
+    if (game.revealRoles) {
+        document.getElementById('availableRoles').classList.remove('hidden');
+    }
 
     gamemessage.innerText = playerState.message;
-
+    console.log(playerState.message);
 
     refreshPlayerList(game, playerState);
 

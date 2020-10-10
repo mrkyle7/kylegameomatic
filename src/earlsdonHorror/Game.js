@@ -1,5 +1,3 @@
-const Card = require('./Card.js');
-
 const Player = require('./Player.js')
 
 class Game {
@@ -15,31 +13,9 @@ class Game {
     started = false;
     gameOver = false;
     isNight = true;
+    revealRoles = false;
     /** @type {Player[]} */
     winners;
-    cardsSelectable = false;
-    /** @type {Player} */
-    playerToChooseRow;
-
-    /** @type {number} */
-    poisonedRow;
-
-    /** @type {Card} */
-    lastPlacedCard = undefined;
-
-    /** @type {Card[]} */
-    selectedCards = [];
-
-    /** @type {Card[]} */
-    row1cards = [];
-    /** @type {Card[]} */
-    row2cards = [];
-    /** @type {Card[]} */
-    row3cards = [];
-    /** @type {Card[]} */
-    row4cards = [];
-
-    rows = [this.row1cards, this.row2cards, this.row3cards, this.row4cards];
 
     /**
      * @param {string} name
@@ -76,7 +52,7 @@ class Game {
                 return 0
             })
 
-            this.players.forEach(p => p.role = roles.splice(0, 1)[0].name)
+            this.players.forEach(p => p.role = roles.pop().name)
 
             this.started = true;
             this.startNight();
@@ -212,15 +188,17 @@ class Game {
             const numberOfAliveDoctors = this.players.filter(p => p.role === 'doctor' && !p.isDead).length
             const numberOfAliveSeers = this.players.filter(p => p.role === 'seer' && !p.isDead).length
             const playerEaten = this.players.find(p => p.votedEatenBy.length === numberOfAliveWerewolves);
-            const playerHealed = this.players.find(p => p.votedHealBy.length === numberOfAliveDoctors)
-            const playerSeen = this.players.find(p => p.votedDreamBy.length === numberOfAliveSeers)
+            const playerHealed = numberOfAliveDoctors > 0 ? this.players.find(p => p.votedHealBy.length === numberOfAliveDoctors) : undefined
+            const playerSeen = numberOfAliveSeers > 0 ? this.players.find(p => p.votedDreamBy.length === numberOfAliveSeers) : undefined
             if (playerEaten === playerHealed) {
                 this.players.forEach(p => p.message = `${playerEaten.name} was attacked by werewolves! Luckily the doctor got to them in time and they survived!`)
             } else {
                 this.players.forEach(p => p.message = `${playerEaten.name} was viciously attacked and eaten by werewolves!`);
                 playerEaten.isDead = true;
             }
-            playerSeen.revealed = true;
+            if (playerSeen) {
+                playerSeen.revealed = true;
+            }
 
             this.isNight = false;
 
@@ -228,8 +206,7 @@ class Game {
                 if (numberOfAliveWerewolves >= this.players.filter(p => p.role !== 'werewolf' && !p.isDead).length
                 ) {
                     this.gameOver = true;
-                    const deadWerewolf =
-                        this.players.find(p => p.role === 'werewolf' && p.isDead);
+                    const deadWerewolf = this.players.find(p => p.role === 'werewolf' && p.isDead);
                     this.players.forEach(p => p.message = deadWerewolf ?
                         `The werewolves won! Except ${deadWerewolf.name} who died.`
                         : `The werewolves won!`)
@@ -241,6 +218,7 @@ class Game {
     }
 
     startDay() {
+        this.revealRoles = true;
         this.players.forEach(player => {
             player.votedDreamBy = [];
             player.votedEatenBy = [];
@@ -272,7 +250,8 @@ class Game {
             players: this.players.map(p => p.toJson(player, this.isNight, this.gameOver)),
             started: this.started,
             gameOver: this.gameOver,
-            isNight: this.isNight
+            isNight: this.isNight,
+            revealRoles: this.revealRoles
         }
     }
 }
