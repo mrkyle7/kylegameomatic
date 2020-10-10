@@ -53,6 +53,8 @@
     text-align: center;
     color: rgb(31, 31, 31);
     font-family: cursive;
+    overflow: hidden;
+    text-overflow: ellipsis;
 }
 
 .player.dead{
